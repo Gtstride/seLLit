@@ -4,7 +4,7 @@ import Directory from '../../components/directory/Directory'
 import "./HomePage.style.scss";
 
 const HomePage = () => (
-  <div>
+  <div className="homepage">
     <Directory />
   </div>
 )
