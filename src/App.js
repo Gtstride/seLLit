@@ -6,7 +6,7 @@ import HomePage from "./pages/homePage/HomePage";
 import ShopPage from "./pages/shop/ShopPage";
 
 import SignInSignUp from "./pages/auth/SignInSignUp";
-import { auth } from "./firebase/FireBase.utils";
+import { auth, createUserProfileDocument } from "./firebase/FireBase.utils";
 
 import "./App.css";
 
@@ -19,17 +19,32 @@ class App extends Component {
     };
   }
 
-  unsubscribeFromAuth = null
+  unsubscribeFromAuth = null;
 
   componentDidMount() {
-    this.unsubscribeFromAuth = auth.onAuthStateChanged(user => {
-      this.setState({ currentUser: user });
+    this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
+      // this.setState({ currentUser: user });
+      if (userAuth) {
+        const userRef = await createUserProfileDocument(userAuth);
 
-      console.log(user);
+        userRef.onSnapshot(onSnapshot => {
+          this.setState({
+            currentUser: {
+              id: onSnapshot.id,
+              ...onSnapshot.data()
+            }
+          });
+          console.log(this.state);
+        });
+      } else {
+        this.setState({
+          currentUser: userAuth
+        });
+      }
     });
   }
 
-  componentWillUnmount() { 
+  componentWillUnmount() {
     this.unsubscriebeFromAuth();
   }
 
