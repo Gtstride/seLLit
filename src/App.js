@@ -34,7 +34,6 @@ class App extends Component {
               ...onSnapshot.data()
             }
           });
-          console.log(this.state);
         });
       } else {
         this.setState({
